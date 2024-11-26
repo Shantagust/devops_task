@@ -1,5 +1,79 @@
-<html>
-<h2>
-	HELLO DEV OPS - updated <b>100% </b>!!!!
-</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отправка сообщения в Slack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0078d7;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <h1>Отправка сообщения в Slack</h1>
+    <input type="text" id="slackMessage" placeholder="Введите сообщение" />
+    <button onclick="sendMessage()">Отправить</button>
+
+    <script>
+        function sendMessage() {
+            const message = document.getElementById('slackMessage').value; // Получаем введенное сообщение
+
+            if (!message) {
+                alert('Введите сообщение!');
+                return;
+            }
+
+            const token = 'xapp-1-A08362MUU00-8070792454599-139fbb6ac4b9acc52bda28d92c4de15cbc973e23c8ef808a917051eed3dde4a5'; // Ваш OAuth Access Token
+            const channel = 'C082H50QK99'; // ID канала
+
+            fetch('https://slack.com/api/chat.postMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    channel: channel,
+                    text: message,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.ok) {
+                    alert('Сообщение отправлено!');
+                } else {
+                    alert(`Ошибка при отправке: ${data.error}`);
+                    console.error('Ошибка:', data);
+                }
+            })
+            .catch(error => {
+                alert('Ошибка при отправке сообщения.');
+                console.error('Ошибка:', error);
+            });
+        }
+    </script>
+</body>
 </html>
